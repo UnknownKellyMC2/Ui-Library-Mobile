@@ -771,8 +771,7 @@ function Material.Load(Config)
 	TitleBar.ImageColor3 = Theme.TitleBar
 	TitleBar.ImageTransparency = 1
 	TitleBar.Parent = MainFrame
-    TitleBar.Draggable = true
-    
+
 	local ExtraBar = Objects.new("Frame")
 	ExtraBar.Name = "Hidden"
 	ExtraBar.Size = UDim2.fromScale(1,0) + UDim2.fromOffset(0,5)
@@ -792,8 +791,23 @@ function Material.Load(Config)
 	TitleText.TextTransparency = 1
 	TitleText.Font = Enum.Font.GothamBold
 	TitleText.Parent = TitleBar
-    TitleText.Draggable = true
 
+	TitleText.MouseButton1Down:Connect(function()
+		local Mx, My = Mouse.X, Mouse.Y
+		local MouseMove, MouseKill
+		MouseMove = Mouse.Move:Connect(function()
+			local nMx, nMy = Mouse.X, Mouse.Y
+			local Dx, Dy = nMx - Mx, nMy - My
+			MainFrame.Position = MainFrame.Position + UDim2.fromOffset(Dx, Dy)
+			Mx, My = nMx, nMy
+		end)
+		MouseKill = InputService.InputEnded:Connect(function(UserInput)
+			if (UserInput.UserInputType == Enum.UserInputType.MouseButton1 or UserInput.UserInputType == Enum.UserInputType.Touch) then
+				MouseMove:Disconnect()
+				MouseKill:Disconnect()
+			end
+		end)
+	end)
 
 	local MinimiseButton = Objects.new("SmoothButton")
 	MinimiseButton.Size = UDim2.fromOffset(20,20)
@@ -1985,7 +1999,7 @@ function Material.Load(Config)
 					H.Value = 1 - GetXY(HueTracker)
 				end)
 				MouseKill = InputService.InputEnded:Connect(function(UserInput)
-					if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+					if (UserInput.UserInputType == Enum.UserInputType.MouseButton1 or UserInput.UserInputType == Enum.UserInputType.Touch) then
 						MouseMove:Disconnect()
 						MouseKill:Disconnect()
 					end
@@ -1999,7 +2013,7 @@ function Material.Load(Config)
 					V.Value = 1 - GetXY(HueTracker)
 				end)
 				MouseKill = InputService.InputEnded:Connect(function(UserInput)
-					if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+					if (UserInput.UserInputType == Enum.UserInputType.MouseButton1 or UserInput.UserInputType == Enum.UserInputType.Touch) then
 						MouseMove:Disconnect()
 						MouseKill:Disconnect()
 					end
@@ -2013,7 +2027,7 @@ function Material.Load(Config)
 					S.Value = 1 - GetXY(HueTracker)
 				end)
 				MouseKill = InputService.InputEnded:Connect(function(UserInput)
-					if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+					if (UserInput.UserInputType == Enum.UserInputType.MouseButton1 or UserInput.UserInputType == Enum.UserInputType.Touch) then
 						MouseMove:Disconnect()
 						MouseKill:Disconnect()
 					end
@@ -2356,7 +2370,7 @@ function Material.Load(Config)
 					SliderCallback(Value)
 				end)
 				MouseKill = InputService.InputEnded:Connect(function(UserInput)
-					if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+					if (UserInput.UserInputType == Enum.UserInputType.MouseButton1 or UserInput.UserInputType == Enum.UserInputType.Touch) then
 						TweenService:Create(SliderFadedDot, TweenInfo.new(0.15), {ImageTransparency = 1}):Play()
 						MouseMove:Disconnect()
 						MouseKill:Disconnect()
