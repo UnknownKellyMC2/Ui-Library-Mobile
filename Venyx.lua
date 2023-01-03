@@ -1440,10 +1440,10 @@ do
 				local x = hue -- hue is updated
 				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness}) -- roblox is literally retarded
 				utility:Tween(tab.Container.Color.Select, {Position = UDim2.new(x, 0, 0, 0)}, 0.1) -- overwrite
-			
+				
 				callback(color3)
-			end)
 				utility:Wait()
+				end)
 			    end
 		end)
 		
@@ -2090,9 +2090,13 @@ do
 		if value ~= lvalue and slider.ImageTransparency == 0 then
 			utility:Pop(slider, 10)
 		end
-	 
+		
+
 		return value
- end)
+		end)
+	end
+
+
 	
 	function section:updateDropdown(dropdown, title, list, callback)
 		dropdown = self:getModule(dropdown)
@@ -2170,7 +2174,6 @@ do
 			frame.ScrollBarImageTransparency = 1
 		end
 	end
-end
 end
 
 return library
