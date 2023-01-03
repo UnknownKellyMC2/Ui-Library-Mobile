@@ -1,11 +1,9 @@
--- credits init for re-uploading venyx ui lib
--- credits to Svamp or me for adding mobile support
+-- init
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 -- services
 local input = game:GetService("UserInputService")
-local uis = game:GetService("UserInputService")
 local run = game:GetService("RunService")
 local tween = game:GetService("TweenService")
 local tweeninfo = TweenInfo.new
@@ -111,8 +109,8 @@ do
 		self.keybinds = {}
 		self.ended = {}
 		
-		input.InputBegan:Connect(function(key,proc)
-			if self.keybinds[key.KeyCode] and not proc then
+		input.InputBegan:Connect(function(key)
+			if self.keybinds[key.KeyCode] then
 				for i, bind in pairs(self.keybinds[key.KeyCode]) do
 					bind()
 				end
@@ -120,7 +118,7 @@ do
 		end)
 		
 		input.InputEnded:Connect(function(key)
-			if key.UserInputType == Enum.UserInputType.MouseButton1 then
+			if key.UserInputType == Enum.UserInputType.MouseButton1 or key.UserInputType == Enum.UserInputType.Touch then
 				for i, callback in pairs(self.ended) do
 					callback()
 				end
@@ -340,7 +338,8 @@ do
 				ZIndex = 3,
 				Image = "rbxassetid://" .. tostring(icon),
 				ImageColor3 = themes.TextColor,
-				ImageTransparency = 0.64
+				ImageTransparency = 0.64,
+				ScaleType = Enum.ScaleType.Fit
 			}) or {}
 		})
 		
@@ -1428,9 +1427,8 @@ do
 			draggingColor = true
 			
 			while draggingColor do
-
-			    uis.TouchMoved:connect(function(touch, gameProcessedEvent)
-				hue = 1 - math.clamp(1 - ((touch.X - colorPosition.X) / colorSize.X), 0, 1)
+			
+				hue = 1 - math.clamp(1 - ((mouse.X - colorPosition.X) / colorSize.X), 0, 1)
 				color3 = Color3.fromHSV(hue, sat, brightness)
 				
 				for i, prop in pairs({"r", "g", "b"}) do
@@ -1443,8 +1441,7 @@ do
 				
 				callback(color3)
 				utility:Wait()
-				end)
-			    end
+			end
 		end)
 		
 		-- click events
@@ -2074,7 +2071,6 @@ do
 		end
 		
 		local bar = slider.Slider.Bar
-		uis.TouchMoved:connect(function(touch, gameProcessedEvent)
 		local percent = (touch.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
 		
 		if value then -- support negative ranges
@@ -2091,12 +2087,8 @@ do
 			utility:Pop(slider, 10)
 		end
 		
-
 		return value
-		end)
 	end
-
-
 	
 	function section:updateDropdown(dropdown, title, list, callback)
 		dropdown = self:getModule(dropdown)
@@ -2175,5 +2167,6 @@ do
 		end
 	end
 end
+
 
 return library
